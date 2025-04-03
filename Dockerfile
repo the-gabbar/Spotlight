@@ -1,28 +1,30 @@
-# Base Image
-FROM python:3.9-slim
+# Base image
+FROM python:3.9
 
-# Update and Install Dependencies
+# Install dependencies
 RUN apt-get update && apt-get install -y \
-    wget \
-    curl \
-    unzip \
-    chromium \
-    chromium-driver \
+    wget unzip curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Set Chrome and Chromedriver Path
-ENV CHROMIUM_PATH=/usr/bin/chromium
-ENV CHROMEDRIVER_PATH=/usr/bin/chromedriver
+# Install Google Chrome
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable
 
-# Set Working Directory
+# Install ChromeDriver
+RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}') \
+    && wget -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION)/chromedriver_linux64.zip \
+    && unzip /tmp/chromedriver.zip -d /usr/local/bin/ \
+    && rm /tmp/chromedriver.zip
+
+# Install Python dependencies
 WORKDIR /app
-
-# Copy Requirements and Install Dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy All Files
+# Copy project files
 COPY . .
 
-# Start the Bot
+# Start bot
 CMD ["python", "main.py"]
