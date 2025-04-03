@@ -13,8 +13,8 @@ api_hash = os.getenv("API_HASH", "0f6b6ad425a7583b52193fbac0951254")
 bot_token = os.getenv("BOT_TOKEN", "7579326245:AAHTZ1vimdjVTItEJuBB0viCYX57Ezqq-7g")
 
 # Snapchat credentials
-snapchat_username = os.getenv("SNAPCHAT_USERNAME")
-snapchat_password = os.getenv("SNAPCHAT_PASSWORD")
+snapchat_username = os.getenv("yappuyadav")
+snapchat_password = os.getenv("Suhaib.192123")
 
 app = Client("my_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 
