@@ -2,3 +2,4 @@ pyrogram
 tgcrypto
 selenium
 webdriver-manager
+flask
