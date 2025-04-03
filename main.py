@@ -1,4 +1,5 @@
 from pyrogram import Client, filters
+from server import keep_alive
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -7,9 +8,9 @@ import time
 import os
 
 # Telegram API credentials
-api_id = int(os.getenv("API_ID"))  # Render pe environment variables use karna better hai
-api_hash = os.getenv("API_HASH")
-bot_token = os.getenv("BOT_TOKEN")
+api_id = int(os.getenv("API_ID", "9193752"))  # Render pe environment variables use karna better hai
+api_hash = os.getenv("API_HASH", "0f6b6ad425a7583b52193fbac0951254")
+bot_token = os.getenv("BOT_TOKEN", "7579326245:AAHTZ1vimdjVTItEJuBB0viCYX57Ezqq-7g")
 
 # Snapchat credentials
 snapchat_username = os.getenv("SNAPCHAT_USERNAME")
@@ -30,6 +31,9 @@ service = Service("/usr/bin/chromedriver")
 
 driver = webdriver.Chrome(service=service, options=chrome_options)
 
+@app.on_message(filters.command("start") & filters.private)
+async def start(client, message):
+    await message.reply("Bot is Running 24/7!")
 @app.on_message(filters.video & filters.private)
 async def upload_to_spotlight(client, message):
     file_path = await client.download_media(message.video)
@@ -67,5 +71,5 @@ async def upload_to_spotlight(client, message):
 
     finally:
         driver.quit()
-
+keep_alive()
 app.run()
